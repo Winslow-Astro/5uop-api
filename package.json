@@ -1,0 +1,11 @@
+{
+  "name": "5uop-api",
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "openai": "^4.0.0"
+  }
+}
