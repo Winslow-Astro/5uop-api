@@ -1,35 +1,286 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>5UOP API Test</title>
+    <title>🔮 Crystal Ball - What do people REALLY want?</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
-        textarea { width: 100%; height: 100px; margin: 10px 0; }
-        button { background: #0070f3; color: white; border: none; padding: 10px 20px; cursor: pointer; }
-        .result { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        
+        .ai-badge {
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .input-section {
+            margin-bottom: 20px;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 15px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .analyze-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .analyze-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            display: none;
+        }
+        
+        .result h3 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .insight {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .insight h4 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .insight p {
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .examples {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            color: white;
+        }
+        
+        .examples h3 {
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        
+        .example {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .example:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .loading {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e1e5e9;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-    <h1>5UOP API Test</h1>
-    <textarea id="input" placeholder="Enter a behavioral situation to analyze...">I keep procrastinating and then panic at the last minute</textarea>
-    <br>
-    <button onclick="testAPI()">Analyze Behavior</button>
+    <div class="header">
+        <h1>🔮 Crystal Ball</h1>
+        <p>What do people REALLY want?</p>
+        <span class="ai-badge">AI POWERED</span>
+    </div>
     
-    <div id="result" class="result" style="display:none;">
-        <h3>Analysis Result:</h3>
-        <pre id="output"></pre>
+    <div class="container">
+        <div class="input-section">
+            <textarea id="input" placeholder="I'm stuck between wanting to give up on life or actually getting better.
+
+Title is pretty self explanatory, i feel like nothing in life goes positively for me; friendships, jobs, relationships. I'm so alone and sad & I want to get better but I don't know how or where to start."></textarea>
+            
+            <button class="analyze-btn" onclick="analyzeText()" id="analyzeBtn">
+                🔮 <span>Read Them</span>
+            </button>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <span>Analyzing behavior...</span>
+        </div>
+        
+        <div class="result" id="result">
+            <h3>🔍 The Hard Truth:</h3>
+            <div class="insight">
+                <h4>Their Real Motivation:</h4>
+                <div id="tags"></div>
+                <p id="interpretation"></p>
+            </div>
+            <div class="insight">
+                <h4>🎯 What They REALLY Want:</h4>
+                <p id="advice"></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="examples">
+        <h3>💡 Try these examples:</h3>
+        <div class="example" onclick="setExample(this)">
+            "My boyfriend always promises things then doesn't follow through"
+        </div>
+        <div class="example" onclick="setExample(this)">
+            "My coworker sends me random memes at 2am and changes topics every 5 minutes"
+        </div>
+        <div class="example" onclick="setExample(this)">
+            "My friend says 'I'm fine' but clearly isn't and won't talk about it"
+        </div>
+        <div class="example" onclick="setExample(this)">
+            "My boss micromanages everything and needs to approve every tiny decision"
+        </div>
+        <div class="example" onclick="setExample(this)">
+            "My date keeps talking about their ex's success and how they need to prove themselves"
+        </div>
     </div>
 
     <script>
-        async function testAPI() {
-            const input = document.getElementById('input').value;
-            const resultDiv = document.getElementById('result');
-            const output = document.getElementById('output');
+        function setExample(element) {
+            document.getElementById('input').value = element.textContent.replace(/"/g, '');
+        }
+        
+        async function analyzeText() {
+            const input = document.getElementById('input').value.trim();
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
             
-            if (!input.trim()) {
+            if (!input) {
                 alert('Please enter some text to analyze');
                 return;
             }
+            
+            // Show loading state
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = '🔮 <span>Analyzing...</span>';
+            loading.style.display = 'flex';
+            result.style.display = 'none';
             
             try {
                 const response = await fetch('/api/analyze', {
@@ -40,15 +291,44 @@
                     body: JSON.stringify({ text: input })
                 });
                 
-                const result = await response.json();
-                output.textContent = JSON.stringify(result, null, 2);
-                resultDiv.style.display = 'block';
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Display results
+                    const tags = document.getElementById('tags');
+                    const interpretation = document.getElementById('interpretation');
+                    const advice = document.getElementById('advice');
+                    
+                    // Show primary tag and secondary tag if exists
+                    tags.innerHTML = `<span class="tag">${data.data.primary_tag}</span>` +
+                        (data.data.secondary_tag ? `<span class="tag">${data.data.secondary_tag}</span>` : '');
+                    
+                    interpretation.textContent = data.data.interpretation;
+                    advice.textContent = data.data.advice;
+                    
+                    result.style.display = 'block';
+                } else {
+                    alert('Analysis failed: ' + data.error);
+                }
                 
             } catch (error) {
-                output.textContent = 'Error: ' + error.message;
-                resultDiv.style.display = 'block';
+                console.error('Error:', error);
+                alert('Something went wrong. Please try again.');
+            } finally {
+                // Reset button state
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = '🔮 <span>Read Them</span>';
+                loading.style.display = 'none';
             }
         }
+        
+        // Allow Enter key to submit (with Shift+Enter for new lines)
+        document.getElementById('input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                analyzeText();
+            }
+        });
     </script>
 </body>
 </html>
