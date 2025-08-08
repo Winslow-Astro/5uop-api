@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>5UOP API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        textarea { width: 100%; height: 100px; margin: 10px 0; }
+        button { background: #0070f3; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+        .result { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>5UOP API Test</h1>
+    <textarea id="input" placeholder="Enter a behavioral situation to analyze...">I keep procrastinating and then panic at the last minute</textarea>
+    <br>
+    <button onclick="testAPI()">Analyze Behavior</button>
+    
+    <div id="result" class="result" style="display:none;">
+        <h3>Analysis Result:</h3>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        async function testAPI() {
+            const input = document.getElementById('input').value;
+            const resultDiv = document.getElementById('result');
+            const output = document.getElementById('output');
+            
+            if (!input.trim()) {
+                alert('Please enter some text to analyze');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text: input })
+                });
+                
+                const result = await response.json();
+                output.textContent = JSON.stringify(result, null, 2);
+                resultDiv.style.display = 'block';
+                
+            } catch (error) {
+                output.textContent = 'Error: ' + error.message;
+                resultDiv.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
