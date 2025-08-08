@@ -1,0 +1,15 @@
+{
+  "name": "5uop-api",
+  "version": "1.0.0",
+  "description": "AI API for behavioral analysis using the 5 Universal Operating Principles",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Build complete'"
+  },
+  "dependencies": {
+    "openai": "^4.0.0"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
